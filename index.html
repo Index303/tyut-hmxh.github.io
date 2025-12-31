@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>航模协会 | 首页</title>
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <style>
+    /* ======================
+       Hero 轮播区域
+    ====================== */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 520px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: #fff;
+    }
+
+    .slideshow {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .slides {
+      display: flex;
+      height: 100%;
+      transition: transform 0.8s ease-in-out;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      flex-shrink: 0;
+    }
+
+    .hero-text {
+      max-width: 900px;
+      margin: auto;
+      padding: 24px;
+      backdrop-filter: brightness(0.7);
+      border-radius: 12px;
+    }
+
+    /* ======================
+       左右切换按钮
+    ====================== */
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.45);
+      border: none;
+      color: white;
+      font-size: 32px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.3s;
+    }
+
+    .slider-btn:hover {
+      background: rgba(0, 0, 0, 0.65);
+    }
+
+    .slider-btn.prev {
+      left: 24px;
+    }
+
+    .slider-btn.next {
+      right: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        height: 70vh;
+      }
+      .slider-btn {
+        font-size: 24px;
+        width: 44px;
+        height: 44px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- 左侧竖向导航 -->
+<header class="site-header sidebar">
+  <div class="sidebar-container">
+    <a class="logo" href="index.html">
+      <img src="assets/images/logo.png" alt="航模协会 Logo" class="logo-img">
+      <span>太原理工大学航模协会</span>
+    </a>
+
+    <nav class="nav vertical-nav">
+      <a href="index.html" class="active">首页</a>
+      <a href="introduction.html">协会介绍</a>
+      <a href="projects.html">项目</a>
+      <a href="announcement.html">通知公告</a>
+      <a href="downloads.html">资料下载</a>
+      <a href="equipment.html">设备管理</a>
+      <a href="contact.html">加入我们</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ======================
+       Hero 区域
+  ====================== -->
+  <section class="hero">
+    <div class="slideshow">
+      <div class="slides" id="slides">
+        <div class="slide" style="background-image:url('assets/images/background/bg1.jpg')"></div>
+        <div class="slide" style="background-image:url('assets/images/background/bg2.jpg')"></div>
+        <div class="slide" style="background-image:url('assets/images/background/bg3.jpg')"></div>
+        <div class="slide" style="background-image:url('assets/images/background/bg4.jpg')"></div>
+        <div class="slide" style="background-image:url('assets/images/background/bg5.jpg')"></div>
+        <div class="slide" style="background-image:url('assets/images/background/bg6.jpg')"></div>
+        <div class="slide" style="background-image:url('assets/images/background/bg7.jpg')"></div>
+      </div>
+    </div>
+
+    <!-- 左右按钮 -->
+    <button class="slider-btn prev" id="prevBtn">‹</button>
+    <button class="slider-btn next" id="nextBtn">›</button>
+
+    <div class="container hero-text">
+      <h1>欢迎来到 太原理工大学航模协会</h1>
+      <p>
+        太原理工大学航模协会是在航空航天学院指导下，
+        致力于营造航空文化氛围、提升实践与创新能力的学生科技社团。
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ======================
+     轮播逻辑
+====================== -->
+<script>
+  const slides = document.getElementById("slides");
+  const slideItems = slides.children;
+  const slideCount = slideItems.length;
+  let index = 0;
+  let timer = null;
+
+  function goToSlide(i) {
+    index = (i + slideCount) % slideCount;
+    slides.style.transform = `translateX(-${index * 100}%)`;
+  }
+
+  function startAutoPlay() {
+    timer = setInterval(() => {
+      goToSlide(index + 1);
+    }, 6000);
+  }
+
+  function stopAutoPlay() {
+    clearInterval(timer);
+  }
+
+  document.getElementById("prevBtn").addEventListener("click", () => {
+    stopAutoPlay();
+    goToSlide(index - 1);
+    startAutoPlay();
+  });
+
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    stopAutoPlay();
+    goToSlide(index + 1);
+    startAutoPlay();
+  });
+
+  startAutoPlay();
+</script>
+
+</body>
+</html>

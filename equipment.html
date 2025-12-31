@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>设备管理 — 航模协会</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .equip-container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fafafa;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px #0002;
+    }
+    .equip-container h2 { margin-bottom: 10px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    table th, table td {
+      padding: 8px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    .btn-small {
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 0;
+      cursor: pointer;
+    }
+    .btn-borrow { background: #0b6cff; color: #fff; }
+    .btn-return { background: #28a745; color: #fff; }
+    .btn-delete { background: #d9534f; color: #fff; }
+  </style>
+</head>
+
+<body>
+<!-- 左侧竖向导航栏 -->
+<header class="site-header sidebar">
+  <div class="sidebar-container">
+    <a class="logo" href="index.html">
+      <img src="assets/images/logo.png" alt="航模协会 Logo" class="logo-img">
+      <span>太原理工大学航模协会</span>
+    </a>
+
+    <nav class="nav vertical-nav">
+      <a href="index.html">首页</a>
+      <a href="introduction.html">协会介绍</a>
+      <a href="projects.html">项目</a>
+      <a href="announcement.html">通知公告</a>
+      <a href="downloads.html">资料下载</a>
+      <a href="equipment.html">设备管理</a>
+      <a href="contact.html" class="active">加入我们</a>
+    </nav>
+  </div>
+</header>
+
+<main class="equip-container">
+  <div id="adminBar" style="margin-bottom:15px;"></div>
+
+
+  <h1>设备管理系统</h1>
+  <p>用于记录设备借用、归还与管理</p>
+
+  <!-- 添加设备 -->
+  <div id="addEquipBox">
+    <h2>添加设备</h2>
+    <input id="equipName" type="text" placeholder="设备名称，如：FS-1" style="width:60%; padding:8px;">
+    <button onclick="addEquipment()" class="btn">添加</button>
+  </div>
+
+  <!-- 设备列表 -->
+  <h2 style="margin-top:20px;">设备列表</h2>
+  <table id="equipTable">
+    <thead>
+      <tr>
+        <th>设备名称</th>
+        <th>状态</th>
+        <th>借用人</th>
+        <th>借用时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <a href="index.html" class="card" style="margin-top:24px;display:inline-block;">
+    ← 返回首页
+  </a>
+
+</main>
+
+<script>
+const ADMIN_PASSWORD = "hmxh123"; // 管理员密码
+let isAdmin = localStorage.getItem("isAdmin") === "true";
+
+// 获取本地设备数据
+let equipments = JSON.parse(localStorage.getItem("equipments") || "[]");
+
+// ==== 显示管理员登录/登出按钮 ====
+function updateAdminUI() {
+  const adminBar = document.getElementById("adminBar");
+  if (!adminBar) return;
+  adminBar.innerHTML = isAdmin
+    ? `<span style="margin-right:10px;color:#28a745;">管理员已登录</span>
+       <button onclick="logoutAdmin()" class="btn-small">退出管理员模式</button>`
+    : `<button onclick="loginAdmin()" class="btn-small">管理员登录</button>`;
+
+  document.getElementById("addEquipBox").style.display = isAdmin ? "block" : "none";
+  renderTable();
+}
+
+// ==== 管理员登录 ====
+function loginAdmin() {
+  const pwd = prompt("请输入管理员密码：");
+  if (pwd === ADMIN_PASSWORD) {
+    isAdmin = true;
+    localStorage.setItem("isAdmin", "true");
+    updateAdminUI();
+  } else {
+    alert("密码错误！");
+  }
+}
+
+// ==== 管理员退出 ====
+function logoutAdmin() {
+  isAdmin = false;
+  localStorage.setItem("isAdmin", "false");
+  updateAdminUI();
+}
+
+// ==== 添加设备 ====
+function addEquipment() {
+  if (!isAdmin) return;
+  const name = document.getElementById("equipName").value.trim();
+  if (!name) return alert("请输入设备名称！");
+  equipments.push({ name, status: "可用", borrower: "", time: "" });
+  saveData();
+  renderTable();
+  document.getElementById("equipName").value = "";
+}
+
+// ==== 借出设备 ====
+function borrowEquipment(index) {
+  if (!isAdmin) return;
+  const person = prompt("请输入借用人姓名：");
+  if (!person) return;
+  equipments[index].status = "借出";
+  equipments[index].borrower = person;
+  equipments[index].time = new Date().toLocaleString();
+  saveData();
+  renderTable();
+}
+
+// ==== 归还设备 ====
+function returnEquipment(index) {
+  if (!isAdmin) return;
+  equipments[index].status = "可用";
+  equipments[index].borrower = "";
+  equipments[index].time = "";
+  saveData();
+  renderTable();
+}
+
+// ==== 删除设备 ====
+function deleteEquipment(index) {
+  if (!isAdmin) return;
+  if (confirm("确认删除该设备？")) {
+    equipments.splice(index, 1);
+    saveData();
+    renderTable();
+  }
+}
+
+// ==== 存储数据 ====
+function saveData() {
+  localStorage.setItem("equipments", JSON.stringify(equipments));
+}
+
+// ==== 渲染表格 ====
+function renderTable() {
+  const tbody = document.querySelector("#equipTable tbody");
+  tbody.innerHTML = "";
+  equipments.forEach((eq, i) => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${eq.name}</td>
+        <td>${eq.status}</td>
+        <td>${eq.borrower || "-"}</td>
+        <td>${eq.time || "-"}</td>
+        <td>
+          ${isAdmin
+            ? (eq.status === "可用"
+                ? `<button class="btn-small btn-borrow" onclick="borrowEquipment(${i})">借出</button>`
+                : `<button class="btn-small btn-return" onclick="returnEquipment(${i})">归还</button>`)
+            : ""
+          }
+          ${isAdmin ? `<button class="btn-small btn-delete" onclick="deleteEquipment(${i})">删除</button>` : ""}
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// ==== 初始化 ====
+updateAdminUI();
+renderTable();
+</script>
+
+
+</body>
+</html>

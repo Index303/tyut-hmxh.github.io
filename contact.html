@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>联系我们 — 航模协会</title>
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- 页面私有样式（保持不变） -->
+  <style>
+    main.container {
+      max-width: 700px;
+      margin: 60px auto;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.25rem;
+      margin-bottom: 30px;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      font-size: 1.25rem;
+      text-align: left;
+    }
+
+    .contact-form label {
+      display: flex;
+      flex-direction: column;
+      font-weight: 600;
+    }
+
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+      font-size: 1.1rem;
+      padding: 10px 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+
+    .contact-form textarea {
+      height: 140px;
+      resize: vertical;
+    }
+
+    .contact-form button {
+      margin-top: 10px;
+      padding: 12px 18px;
+      font-size: 1.3rem;
+      border: none;
+      border-radius: 10px;
+      background-color: #005bbb;
+      color: white;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .contact-form button:hover {
+      background-color: #004a9b;
+    }
+
+    footer p {
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- 左侧竖向导航栏 -->
+<header class="site-header sidebar">
+  <div class="sidebar-container">
+    <a class="logo" href="index.html">
+      <img src="assets/images/logo.png" alt="航模协会 Logo" class="logo-img">
+      <span>太原理工大学航模协会</span>
+    </a>
+
+    <nav class="nav vertical-nav">
+      <a href="index.html">首页</a>
+      <a href="introduction.html">协会介绍</a>
+      <a href="projects.html">项目</a>
+      <a href="announcement.html">通知公告</a>
+      <a href="downloads.html">资料下载</a>
+      <a href="equipment.html">设备管理</a>
+      <a href="contact.html">加入我们</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <h1>加入我们</h1>
+  <p>请填写下面表单，我们会尽快与您联系。</p>
+  <p>（此模块仅限百团大战招新使用，其他时间填写无效）</p>
+
+  <form action="https://formspree.io/f/your-form-id" method="POST" class="contact-form">
+    <label>姓名
+      <input type="text" name="name" required>
+    </label>
+
+    <label>学院 / 年级
+      <input type="text" name="department">
+    </label>
+
+    <label>联系方式（邮箱或电话）
+      <input type="text" name="contact" required>
+    </label>
+
+    <label>想加入的项目
+      <select name="project">
+        <option>多旋翼</option>
+        <option>对地</option>
+        <option>限时载运</option>
+        <option>三公斤</option>
+        <option>火箭</option>
+        <option>机翼静载</option>
+      </select>
+    </label>
+
+    <label>留言
+      <textarea name="message"></textarea>
+    </label>
+
+    <button type="submit">提交</button>
+  </form>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>© <span id="year"></span> 航模协会</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
